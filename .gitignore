@@ -1,0 +1,10 @@
+node_modules/
+.next/
+out/
+*.db
+*.db-shm
+*.db-wal
+data/inquiries.json
+.env*
+!.env.example
+.vercel
