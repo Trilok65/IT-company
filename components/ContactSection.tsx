@@ -13,7 +13,7 @@ export default function ContactSection() {
         </a>
       </div>
       <div className="contact-form-wrap">
-          <ContactForm />
+        <ContactForm />
       </div>
     </section>
   );
