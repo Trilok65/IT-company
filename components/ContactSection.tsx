@@ -7,8 +7,8 @@ export default function ContactSection() {
         <div className="eyebrow">LET'S WORK TOGETHER</div>
         <h2>Ready to build<br /><em>something?</em></h2>
         <p>Tell us what you need. We'll come back with a clear proposal within one business day, no commitment required.</p>
-        <a className="calendly-link" href="mailto:nepalexportingit2082@gmail.com">nepalexportingit2082@gmail.com <span>↗</span></a>
-        <a className="calendly-link" href="https://calendly.com" target="_blank" rel="noreferrer">
+        <a className="calendly-link" href="mailto:hello@nepalexportingit.com">hello@nepalexportingit.com <span>↗</span></a>
+        <a className="calendly-link" href="https://calendly.com/nepalexportingit" target="_blank" rel="noreferrer">
           Prefer to pick a time? Open Calendly <span>↗</span>
         </a>
       </div>
