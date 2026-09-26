@@ -27,12 +27,23 @@ export default function ContactForm() {
     setError("");
 
     try {
-      const response = await fetch("https://formspree.io/f/YOUR_ID", {
+  const form = event.currentTarget;
+  const formData = new FormData(form);
+      const response = await fetch(form.action, {
         method: "POST",
         headers: { Accept: "application/json" },
-        body: new FormData(event.currentTarget),
+        body: formData,
       });
-      if (!response.ok) throw new Error("Unable to send your message. Please try again.");
+
+      const result = (await response.json()) as {
+        error?: string;
+        errors?: Array<{ message: string }>;
+      };
+      if (!response.ok) {
+        throw new Error(
+          result.errors?.[0]?.message ?? result.error ?? "Unable to send your message."
+        );
+      }
       setSubmitted(true);
     } catch (submissionError) {
       setError(submissionError instanceof Error ? submissionError.message : "Unable to send your message.");
@@ -46,7 +57,12 @@ export default function ContactForm() {
   }
 
   return (
-    <form action="https://formspree.io/f/YOUR_ID" method="POST" onSubmit={handleSubmit} className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 sm:p-8">
+    <form
+      onSubmit={handleSubmit}
+      action="https://formspree.io/f/YOUR_ID"
+      method="POST"
+      className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 sm:p-8"
+    >
       <div className="grid gap-6 sm:grid-cols-2">
         <div><label htmlFor="name">Name</label><input id="name" name="name" type="text" required className="contact-input" placeholder="Jane Cooper" /></div>
         <div><label htmlFor="email">Work email</label><input id="email" name="email" type="email" required className="contact-input" placeholder="jane@company.com" /></div>

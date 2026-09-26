@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./site-enhancements.css";
 
 export const metadata = {
   title: "Nepal Exporting IT | Grow Your Business Digitally",
