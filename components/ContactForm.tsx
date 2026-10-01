@@ -17,8 +17,6 @@ const budgets = [
   { value: "15k+", label: "$15,000+" },
 ];
 
-const apiBaseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001").replace(/\/$/, "");
-
 type ContactResponse = {
   error?: string;
 };
@@ -38,12 +36,13 @@ export default function ContactForm() {
       const formData = new FormData(form);
       const projectType = String(formData.get("projectType") ?? "");
 
-      const response = await fetch(`${apiBaseUrl}/api/inquiries`, {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.get("name"),
           email: formData.get("email"),
+          company: formData.get("company"),
           projectTypes: projectType ? [projectType] : [],
           budget: formData.get("budget"),
           message: formData.get("message"),

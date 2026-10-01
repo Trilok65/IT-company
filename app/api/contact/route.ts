@@ -9,6 +9,7 @@ const backendApiUrl =
 type ContactPayload = {
   name?: string;
   email?: string;
+  company?: string;
   projectTypes?: string[];
   budget?: string;
   message?: string;
@@ -26,6 +27,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         name: body.name?.trim(),
         email: body.email?.trim(),
+        company: body.company?.trim(),
         projectTypes: body.projectTypes ?? [],
         budget: body.budget?.trim(),
         phone: body.phone?.trim(),

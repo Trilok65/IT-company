@@ -4,8 +4,6 @@ import "./admin.css";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { ArrowLeft, CalendarDays, CheckCircle2, DollarSign, LogOut, Mail, Search, ShieldCheck, Users } from "lucide-react";
 
-const apiBaseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001").replace(/\/$/, "");
-
 type Inquiry = {
   id: number;
   name: string;
@@ -47,7 +45,7 @@ export default function AdminPage() {
     setError("");
 
     try {
-      const response = await fetch(`${apiBaseUrl}/api/inquiries`, {
+      const response = await fetch("/api/admin/inquiries", {
         headers: { Authorization: `Bearer ${adminKey}` },
       });
       const result = (await response.json()) as DashboardResponse & { error?: string };

@@ -48,6 +48,7 @@ function normalizeInquiry(row) {
     id: row.id,
     name: row.name,
     email: row.email,
+    company: row.company,
     phone: row.phone,
     projectTypes: parseProjectTypes(row.project_types),
     project_types: row.project_types,
@@ -83,6 +84,7 @@ app.post('/api/inquiries', async (req, res) => {
   try {
     const name = String(req.body?.name || '').trim();
     const email = String(req.body?.email || '').trim();
+    const company = String(req.body?.company || '').trim() || null;
     const phone = String(req.body?.phone || '').trim() || null;
     const budget = String(req.body?.budget || '').trim();
     const message = String(req.body?.message || '').trim();
@@ -99,10 +101,10 @@ app.post('/api/inquiries', async (req, res) => {
     }
 
     const result = await pool.query(
-      `INSERT INTO inquiries (name, email, phone, project_types, budget, message)
-       VALUES ($1, $2, $3, $4, $5, $6)
-       RETURNING id, name, email, phone, project_types, budget, message, created_at;`,
-      [name, email, phone, JSON.stringify(projectTypes), budget, message]
+      `INSERT INTO inquiries (name, email, company, phone, project_types, budget, message)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id, name, email, company, phone, project_types, budget, message, created_at;`,
+      [name, email, company, phone, JSON.stringify(projectTypes), budget, message]
     );
 
     const row = result.rows[0];
@@ -125,7 +127,7 @@ app.get('/api/inquiries', async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT id, name, email, phone, project_types, budget, message, created_at
+      `SELECT id, name, email, company, phone, project_types, budget, message, created_at
        FROM inquiries
        ORDER BY created_at DESC;`
     );

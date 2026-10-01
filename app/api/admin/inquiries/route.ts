@@ -11,7 +11,7 @@ export async function GET(request: Request) {
 
   try {
     const response = await fetch(`${backendApiUrl}/api/inquiries`, {
-      headers: { authorization },
+      headers: { Authorization: authorization },
     });
 
     const result = await response.json().catch(() => ({}));
