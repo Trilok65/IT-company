@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
-import { addInquiry } from "@/lib/db";
 
 export const runtime = "nodejs";
+
+const backendApiUrl =
+  process.env.BACKEND_API_URL ||
+  (process.env.NODE_ENV === "production" ? "http://backend:3001" : "http://localhost:3001");
 
 type ContactPayload = {
   name?: string;
@@ -9,37 +12,30 @@ type ContactPayload = {
   projectTypes?: string[];
   budget?: string;
   message?: string;
+  phone?: string;
 };
 
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as ContactPayload;
-    const name = body.name?.trim();
-    const email = body.email?.trim();
-    const projectTypes = body.projectTypes?.filter(Boolean) ?? [];
-    const budget = body.budget?.trim();
-    const message = body.message?.trim();
-
-    if (!name || !email || !budget || !message || projectTypes.length === 0) {
-      return NextResponse.json(
-        { error: "Please complete every field and select at least one project type." },
-        { status: 400 }
-      );
-    }
-
-    if (!email.includes("@")) {
-      return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
-    }
-
-    const result = addInquiry({
-      name,
-      email,
-      project_types: JSON.stringify(projectTypes),
-      budget,
-      message,
+    const response = await fetch(`${backendApiUrl}/api/inquiries`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: body.name?.trim(),
+        email: body.email?.trim(),
+        projectTypes: body.projectTypes ?? [],
+        budget: body.budget?.trim(),
+        phone: body.phone?.trim(),
+        message: body.message?.trim(),
+      }),
     });
 
-    return NextResponse.json({ id: result.id }, { status: 201 });
+    const result = (await response.json().catch(() => ({}))) as { error?: string };
+
+    return NextResponse.json(result, { status: response.status });
   } catch {
     return NextResponse.json({ error: "Unable to save your message right now." }, { status: 500 });
   }

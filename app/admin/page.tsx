@@ -4,6 +4,8 @@ import "./admin.css";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { ArrowLeft, CalendarDays, CheckCircle2, DollarSign, LogOut, Mail, Search, ShieldCheck, Users } from "lucide-react";
 
+const apiBaseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001").replace(/\/$/, "");
+
 type Inquiry = {
   id: number;
   name: string;
@@ -45,7 +47,7 @@ export default function AdminPage() {
     setError("");
 
     try {
-      const response = await fetch("/api/admin/inquiries", {
+      const response = await fetch(`${apiBaseUrl}/api/inquiries`, {
         headers: { Authorization: `Bearer ${adminKey}` },
       });
       const result = (await response.json()) as DashboardResponse & { error?: string };
@@ -114,9 +116,9 @@ export default function AdminPage() {
         <div className="admin-stats"><div><Users size={18} /><span>Total inquiries</span><strong>{data.stats.total}</strong></div><div><CalendarDays size={18} /><span>This month</span><strong>{data.stats.thisMonth}</strong></div><div><DollarSign size={18} /><span>15k+ opportunities</span><strong>{data.stats.budgets["15k+"] ?? 0}</strong></div><div><CheckCircle2 size={18} /><span>Showing now</span><strong>{filteredInquiries.length}</strong></div></div>
         <section className="admin-panel"><div className="admin-toolbar"><div className="admin-search"><Search size={16} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search name, email, project..." /></div><select value={budget} onChange={(event) => setBudget(event.target.value)} aria-label="Filter by budget"><option value="all">All budgets</option><option value="under-5k">Under $5,000</option><option value="5-15k">$5,000 - $15,000</option><option value="15k+">$15,000+</option></select></div>
           <div className="admin-table-wrap"><table><thead><tr><th>Contact</th><th>Project</th><th>Budget</th><th>Message</th><th>Received</th></tr></thead><tbody>{filteredInquiries.map((inquiry) => <tr key={inquiry.id}><td><strong>{inquiry.name}</strong><a href={`mailto:${inquiry.email}`}><Mail size={13} />{inquiry.email}</a></td><td><div className="admin-tags">{inquiry.projectTypes.map((type) => <span key={type}>{type}</span>)}</div></td><td><b className="admin-budget">{budgetLabels[inquiry.budget] ?? inquiry.budget}</b></td><td><p className="admin-message">{inquiry.message}</p></td><td className="admin-date">{new Date(inquiry.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</td></tr>)}</tbody></table>{filteredInquiries.length === 0 && <div className="admin-empty">No inquiries match your filters.</div>}</div>
-  </section>
-+        <p className="admin-security-note">Signed in for this browser session. Customer data is protected by your server-side ADMIN_KEY.</p>
-+      </div>
-+    </main>
+        </section>
+        <p className="admin-security-note">Signed in for this browser session. Customer data is protected by your server-side ADMIN_KEY.</p>
+      </div>
+    </main>
   );
 }
