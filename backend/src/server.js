@@ -4,7 +4,14 @@ const dotenv = require('dotenv');
 const { Pool } = require('pg');
 const path = require('path');
 
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+const envFiles = [
+  path.resolve(__dirname, '../../.env'),
+  path.resolve(__dirname, '../../.env.local'),
+];
+
+for (const envPath of envFiles) {
+  dotenv.config({ path: envPath });
+}
 
 const app = express();
 const port = Number(process.env.PORT || 3001);
